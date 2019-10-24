@@ -1,9 +1,8 @@
 #!/bin/bash
 
 # **** Update me when new Xcode versions are released! ****
-PLATFORM="platform=iOS Simulator,OS=11.0,name=iPhone 8"
+PLATFORM="platform=iOS Simulator,OS=12.2,name=iPhone 8"
 SDK="iphonesimulator"
-
 
 # It is pitch black.
 set -e
@@ -13,7 +12,6 @@ function trap_handler() {
     exit 255
 }
 trap trap_handler INT TERM EXIT
-
 
 MODE="$1"
 
@@ -29,8 +27,15 @@ if [ "$MODE" = "framework" ]; then
     exit 0
 fi
 
+if [ "$MODE" = "spm" ]; then
+    echo "Building and testing Zip with SPM."
+    swift test
+    trap - EXIT
+    exit 0
+fi
+
 if [ "$MODE" = "examples" ]; then
-    echo "Building and testing all Zip examples."
+    echo "Building all Zip examples."
 
     for example in examples/*/; do
         echo "Building $example."
